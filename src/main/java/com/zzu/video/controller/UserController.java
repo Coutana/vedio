@@ -1,4 +1,4 @@
-package com.zzu.vedio.controller;
+package com.zzu.video.controller;
 
 /**
  * 注释
