@@ -44,7 +44,7 @@ public class UserService {
         return TokenUtil.generateToken(dbUser.getId());
     }
 
-    public void addUser(User user) {
+    public int addUser(User user) throws Exception{
         String username = user.getUsername();
         String password = user.getPassword();
         if(StringUtils.isNullOrEmpty(username)) {
@@ -58,6 +58,6 @@ public class UserService {
             throw new BizException("该用户已注册！");
         }
         user.setCreateTime(new Date());
-        userMapper.insertUser(user);
+        return userMapper.insertUser(user);
     }
 }

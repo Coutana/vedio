@@ -19,7 +19,7 @@ public class BizException extends RuntimeException{
 
     public BizException(String name){
         super(name);
-        code = "500";
+        code = "200";
     }
 
     public String getCode() {

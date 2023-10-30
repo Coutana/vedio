@@ -1,6 +1,7 @@
 package com.zzu.video.utils;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import java.nio.charset.StandardCharsets;

@@ -14,8 +14,8 @@ import java.util.Date;
 public class Video {
     private int id;
     private int userId;
-    private String title;
     private String videoUrl;
+    private String title;
     private String thumbNail;
     private int duration;
     private String tag;

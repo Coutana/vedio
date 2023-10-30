@@ -15,11 +15,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Component
 public class UserUtil {
-    public Long getCurrentUserId() {
+    public int getCurrentUserId() {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
         String token = request.getHeader("token");
-        Long userId = TokenUtil.verifyToken(token);
+        int userId = TokenUtil.verifyToken(token);
         if(userId < 0) {
             throw new BizException("非法用户");
         }

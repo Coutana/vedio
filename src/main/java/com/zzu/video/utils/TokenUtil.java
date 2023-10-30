@@ -31,13 +31,13 @@ public class TokenUtil {
                 .withExpiresAt(calendar.getTime())
                 .sign(algorithm);
     }
-    public static Long verifyToken(String token){
+    public static int verifyToken(String token){
         try{
             Algorithm algorithm = Algorithm.RSA256(RSAUtil.getPublicKey(), RSAUtil.getPrivateKey());
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
             String userId = jwt.getKeyId();
-            return Long.valueOf(userId);
+            return Integer.parseInt(userId);
         }catch (TokenExpiredException e){
             throw new BizException("555","token过期！");
         }catch (Exception e){
