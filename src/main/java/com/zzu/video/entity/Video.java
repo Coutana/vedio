@@ -12,14 +12,14 @@ import java.util.Date;
  */
 @Data
 public class Video {
-    private int id;
-    private int userId;
-    private String videoUrl;
-    private String title;
-    private String thumbNail;
+    private int vid;
+    private int uid;
+    private String url;
+    private String cover;
     private int duration;
     private String tag;
     private String description;
     private Date createTime;
+    private int status;
 
 }

@@ -11,11 +11,12 @@ import java.util.Date;
  * @since 2.9.0
  */
 @Data
-public class User {
+public class RefreshTokenDetail {
+    private int id;
+
+    private String refreshToken;
+
     private int uid;
-    private String username;
-    private String password;
-    private String salt;
-    private UserInfo userInfo;
+
     private Date createTime;
 }

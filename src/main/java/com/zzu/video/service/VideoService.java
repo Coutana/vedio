@@ -10,7 +10,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * 注释
@@ -42,11 +45,47 @@ public class VideoService {
         return videoMapper.selectByUserId(userId);
     }
 
-    public int like(int id,int userId) {
-        return 1;
+    public void like(int id,int userId) {
+        String videoLikeKey = RedisKeyUtil.getVideoLikeKey(id);
+        String userLikeKey = RedisKeyUtil.getUserLikeKey(userId);
+        boolean isMember = redisTemplate.opsForSet().isMember(videoLikeKey,userId);
+        if(isMember) {
+            redisTemplate.opsForSet().remove(videoLikeKey,userId);
+            redisTemplate.opsForSet().remove(userLikeKey,id);
+        }
+        else {
+            redisTemplate.opsForSet().add(videoLikeKey,userId);
+            redisTemplate.opsForSet().add(userLikeKey,id);
+        }
     }
+
     public Long findVideoLikeCount(int id) {
         return redisTemplate.opsForSet().size(RedisKeyUtil.getVideoLikeKey(id));
+    }
+
+    public Set<Integer> findUserLikeVideoId(int userId) {
+        String userLikeKey = RedisKeyUtil.getUserLikeKey(userId);
+        return redisTemplate.opsForSet().members(userLikeKey);
+    }
+
+    public List<Video> findUserLikeVideo(int userId) {
+        Set<Integer> set = findUserLikeVideoId(userId);
+        List<Video> result = new ArrayList<Video>();
+        for(int s:set) {
+            result.add(findVideoById(s));
+        }
+        return result;
+    }
+
+    public int findVideoLikeStatus(int userId,int id) {
+        String videoLikeKey = RedisKeyUtil.getVideoLikeKey(id);
+        boolean isMember = redisTemplate.opsForSet().isMember(videoLikeKey,userId);
+        if(isMember) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
 
 }

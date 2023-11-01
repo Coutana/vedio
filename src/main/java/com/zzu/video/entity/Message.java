@@ -11,11 +11,11 @@ import java.util.Date;
  * @since 2.9.0
  */
 @Data
-public class User {
-    private int uid;
-    private String username;
-    private String password;
-    private String salt;
-    private UserInfo userInfo;
+public class Message {
+    private int mid;
+    private int fromId;
+    private int toId;
+    private String content;
+    private int isRead;
     private Date createTime;
 }

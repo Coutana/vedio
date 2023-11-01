@@ -4,28 +4,28 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zzu.video.dao.VideoMapper">
     <sql id="insertFields">
-        userId,video_url,thumbnail,title,duration,tag,description,create_time
+        uid,url,cover,duration,tag,description,create_time,status
     </sql>
 
     <sql id="selectFields">
-        id,userId,video_url,thumbnail,title,duration,tag,description,create_time
+        vid,uid,url,cover,duration,tag,description,create_time,status
     </sql>
     <select id="selectById" resultType="Video">
         select <include refid="selectFields"></include>
         from video
-        where id=#{id}
+        where vid=#{vid}
         order by create_time desc
     </select>
 
     <select id="selectByUserId" resultType="Video">
         select <include refid="selectFields"></include>
         from video
-        where userId=#{userId}
+        where uid=#{uid}
         order by create_time desc
     </select>
 
-    <insert id="insertVideo" parameterType="Video" keyProperty="id">
-        insert into videe(<include refid="insertFields"></include>)
-        values(#{userId},#{videoUrl},#{thumbNail},#{title},#{duration},#{tag},#{description},#{createTime})
+    <insert id="insertVideo" parameterType="Video" keyProperty="vid">
+        insert into video(<include refid="insertFields"></include>)
+        values(#{vid},#{uid},#{url},#{cover},#{duration},#{tag},#{description},#{createTime},#{status})
     </insert>
 </mapper>

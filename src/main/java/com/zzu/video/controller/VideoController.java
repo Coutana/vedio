@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 注释
@@ -20,7 +21,6 @@ import java.util.List;
  * @since 2.9.0
  */
 @RestController
-@RequestMapping("/video")
 public class VideoController {
     String accessKey = "kuL2ovVRmvHDPEtsFe62bVk1EZ1Vv8v23DsXBEuD";
     String secretKey = "Gk3WQ-xe1iLVekerGVin8pPDr8Za-r7uPYypacZD";
@@ -35,54 +35,84 @@ public class VideoController {
         this.userUtil = userUtil;
         this.videoService = videoService;
     }
-    @PostMapping("/uploadToken")
-    public JsonResponse<String> upload() throws Exception{
-        Auth auth = Auth.create(accessKey, secretKey);
-        String upToken = auth.uploadToken(bucket);
-        return new JsonResponse<>(upToken);
 
-    }
-
+    /**
+     * 获取文件地址
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/download")
     public JsonResponse<String> download() throws Exception {
         String fileName = "1.jpg";
         String publicUrl = String.format("%s/%s", domainOfBucket, fileName);
         return new JsonResponse<>(publicUrl);
     }
-    @PostMapping("/add")
-    public JsonResponse<String> add(@RequestBody Video video) throws BizException {
-        int userId = userUtil.getCurrentUserId();
-        video.setUserId(userId);
-        video.setCreateTime(new Date());
-        if(videoService.addVideo(video)==1) {
-            return JsonResponse.success();
-        }
-        return JsonResponse.fail();
-    }
+
     /**
-     * 查询自己发布的帖子
+     * 获取上传视频token
+     * @param video
+     * @return
+     * @throws BizException
+     */
+    @PostMapping("/uploadToken")
+    public JsonResponse<String> add(@RequestBody Video video) throws BizException {
+        Auth auth = Auth.create(accessKey, secretKey);
+        String upToken = auth.uploadToken(bucket);
+        int userId = userUtil.getCurrentUserId();
+        video.setUid(userId);
+        video.setCreateTime(new Date());
+        videoService.addVideo(video);
+        return new JsonResponse<>(upToken);
+    }
+
+    /**
+     * 查询用户发布的视频列表
      *
      * @author Coutana
      * @since 2.9.0
      */
-    @PostMapping("/self")
-    public JsonResponse<JSONObject> self() throws BizException{
-        int userId = userUtil.getCurrentUserId();
+    @PostMapping("/video/{userId}")
+    public JsonResponse<List<Video>> getUserVideoList(@PathVariable("userId")int userId) throws BizException{
         List<Video> result = videoService.findVideoByUserId(userId);
-        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(result);
-        return new JsonResponse<>(jsonObject);
-    }
-    @GetMapping("/detail/{id}")
-    public JsonResponse<JSONObject> detail(@PathVariable("id") int id) throws BizException{
-        int userId = userUtil.getCurrentUserId();
-        Video result = videoService.findVideoById(id);
-        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(result);
-        return new JsonResponse<>(jsonObject);
+        return new JsonResponse<>(result);
     }
 
+    /**
+     * 查询用户点赞视频列表
+     * @param userId
+     * @return
+     * @throws BizException
+     */
+    @GetMapping("/user-like/{userId}")
+    public JsonResponse<List<Video>> getUserLikeList(@PathVariable("userId")int userId) throws BizException{
+        List<Video> result = videoService.findUserLikeVideo(userId);
+        return new JsonResponse<>(result);
+
+    }
+
+    /**
+     * 获取视频信息
+     * @param id
+     * @return
+     * @throws BizException
+     */
+    @GetMapping("/detail/{id}")
+    public JsonResponse<Video> detail(@PathVariable("id") int id) throws BizException{
+        Video result = videoService.findVideoById(id);
+        return new JsonResponse<>(result);
+    }
+
+    /**
+     * 点赞视频
+     * @param id
+     * @param userId
+     * @return
+     * @throws BizException
+     */
     @PostMapping("/like")
-    public JsonResponse<String> like(int id) {
-        int userId = userUtil.getCurrentUserId();
+    public JsonResponse<String> like(@RequestBody int id,@RequestBody int userId) throws BizException{
+        videoService.like(id,userId);
         return JsonResponse.success();
     }
+
 }
