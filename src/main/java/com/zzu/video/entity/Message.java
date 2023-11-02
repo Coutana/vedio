@@ -15,6 +15,7 @@ public class Message {
     private int mid;
     private int fromId;
     private int toId;
+    private String conversationId;
     private String content;
     private int isRead;
     private Date createTime;

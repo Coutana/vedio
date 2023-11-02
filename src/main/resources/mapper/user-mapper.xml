@@ -30,7 +30,7 @@
         values(#{username}, #{password},#{userInfo}, #{createTime})
     </insert>
 
-    <insert id="insertRefreshToken" parameterType="RefreshToken" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertRefreshToken" parameterType="RefreshTokenDetail" useGeneratedKeys="true" keyProperty="id">
         insert into user(
             fresh_token,uid,create_time
         )values (
@@ -53,7 +53,7 @@
         and fresh_token = #{refreshToken}
     </delete>
 
-    <select id="getRefreshTokenDetail" resultType ="FreshTokenDetail">
+    <select id="getRefreshTokenDetail" resultType ="RefreshTokenDetail">
         select * from refresh_token
         where refresh_token = #{refreshToken}
     </select>

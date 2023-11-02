@@ -82,7 +82,6 @@ public class UserService implements UserConstant {
         userInfo.setDesc(DESC);
         user.setUserInfo(userInfo);
         userMapper.insertUser(user);
-
     }
 
     public UserInfo findUserInfoById(int userId) {

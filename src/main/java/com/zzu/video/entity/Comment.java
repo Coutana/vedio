@@ -2,6 +2,7 @@ package com.zzu.video.entity;
 
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,5 +17,5 @@ public class Comment {
     private int uid;
     private int vid;
     private String content;
-    private int isRead;
+    private Date createTime;
 }

@@ -2,6 +2,7 @@ package com.zzu.video.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zzu.video.entity.Video;
+import com.zzu.video.service.LikeService;
 import com.zzu.video.service.VideoService;
 import com.zzu.video.utils.UserUtil;
 import com.zzu.video.vo.JsonResponse;
@@ -20,12 +21,12 @@ import java.util.Map;
 @RestController
 public class LikeController {
     private final UserUtil userUtil;
-    private final VideoService videoService;
+    private final LikeService likeService;
 
     @Autowired
-    public LikeController(UserUtil userUtil,VideoService videoService) {
+    public LikeController(UserUtil userUtil,LikeService likeService) {
         this.userUtil = userUtil;
-        this.videoService = videoService;
+        this.likeService = likeService;
     }
 
     /**
@@ -33,10 +34,10 @@ public class LikeController {
      * @param videoId
      * @return
      */
-    @PostMapping("/video-like")
+    @PostMapping("/like-video")
     public JsonResponse<String> addVideoLike(@RequestParam int videoId){
         int userId = userUtil.getCurrentUserId();
-        videoService.like(videoId, userId);
+        likeService.likeVideo(videoId, userId);
         return JsonResponse.success();
     }
 
@@ -45,9 +46,9 @@ public class LikeController {
      * @param id
      * @return
      */
-    @GetMapping("/like-count/{id}")
-    public JsonResponse<JSONObject> getLikeCount(@PathVariable("id")int id) {
-        long count = videoService.findVideoLikeCount(id);
+    @GetMapping("/video/like-count/{id}")
+    public JsonResponse<JSONObject> getVideoLikeCount(@PathVariable("id")int id) {
+        long count = likeService.findVideoLikeCount(id);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("count",count);
         return new JsonResponse<>(jsonObject);
@@ -60,7 +61,7 @@ public class LikeController {
     @GetMapping("/user-like")
     public JsonResponse<List<Video>> getUserLikeVideoList() {
         int userId = userUtil.getCurrentUserId();
-        List<Video> list = videoService.findUserLikeVideo(userId);
+        List<Video> list = likeService.findUserLikeVideo(userId);
         return new JsonResponse<>(list);
     }
 
@@ -69,13 +70,49 @@ public class LikeController {
      * @param id
      * @return
      */
-    @GetMapping("/like-status/{id}")
-    public JsonResponse<JSONObject> getUserLikeStatus(@PathVariable("id")int id) {
+    @GetMapping("/video/like-status/{id}")
+    public JsonResponse<JSONObject> getVideoLikeStatus(@PathVariable("id")int id) {
         int userId = userUtil.getCurrentUserId();
-        int status = videoService.findVideoLikeStatus(userId,id);
+        int status = likeService.findVideoLikeStatus(userId,id);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status",status);
         return new JsonResponse<>(jsonObject);
 
     }
+
+    @PostMapping("/like-comment")
+    public JsonResponse<String> addCommentLike(@RequestParam int videoId){
+        int userId = userUtil.getCurrentUserId();
+        likeService.likeComment(videoId, userId);
+        return JsonResponse.success();
+    }
+
+    /**
+     * 查询评论点赞数量
+     * @param id
+     * @return
+     */
+    @GetMapping("/comment/like-count/{id}")
+    public JsonResponse<JSONObject> getCommentLikeCount(@PathVariable("id")int id) {
+        long count = likeService.findVideoLikeCount(id);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("count",count);
+        return new JsonResponse<>(jsonObject);
+    }
+
+    /**
+     * 查询用户对评论点赞状态
+     * @param
+     * @return
+     */
+    @GetMapping("/commenmt/like-status/{commentId}")
+    public JsonResponse<JSONObject> getCommentLikeStatus(@PathVariable("commentId")int commentId) {
+        int userId = userUtil.getCurrentUserId();
+        int status = likeService.findVideoLikeStatus(userId,commentId);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status",status);
+        return new JsonResponse<>(jsonObject);
+
+    }
+
 }

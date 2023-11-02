@@ -2,7 +2,12 @@ package com.zzu.video.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.qiniu.util.Auth;
+import com.zzu.video.entity.Page;
+import com.zzu.video.entity.UserInfo;
 import com.zzu.video.entity.Video;
+import com.zzu.video.service.CommentService;
+import com.zzu.video.service.LikeService;
+import com.zzu.video.service.ShareService;
 import com.zzu.video.service.VideoService;
 import com.zzu.video.utils.UserUtil;
 import com.zzu.video.vo.JsonResponse;
@@ -10,6 +15,7 @@ import com.zzu.video.vo.exception.BizException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -29,11 +35,13 @@ public class VideoController {
 
     private final UserUtil userUtil;
     private final VideoService videoService;
+    private final LikeService likeService;
 
     @Autowired
-    public VideoController(UserUtil userUtil,VideoService videoService) {
+    public VideoController(UserUtil userUtil,VideoService videoService,LikeService likeService) {
         this.userUtil = userUtil;
         this.videoService = videoService;
+        this.likeService = likeService;
     }
 
     /**
@@ -67,14 +75,15 @@ public class VideoController {
 
     /**
      * 查询用户发布的视频列表
-     *
      * @author Coutana
      * @since 2.9.0
      */
-    @PostMapping("/video/{userId}")
-    public JsonResponse<List<Video>> getUserVideoList(@PathVariable("userId")int userId) throws BizException{
+    @PostMapping("/user-publish/{userId}")
+    public JsonResponse<List<JSONObject>> getUserVideoList(@PathVariable("userId")int userId) throws BizException{
+        int uid = userUtil.getCurrentUserId();//当前用户Id
         List<Video> result = videoService.findVideoByUserId(userId);
-        return new JsonResponse<>(result);
+        List<JSONObject> list = videoService.getVideoResponseData(result,uid);
+        return new JsonResponse<>(list);
     }
 
     /**
@@ -84,35 +93,39 @@ public class VideoController {
      * @throws BizException
      */
     @GetMapping("/user-like/{userId}")
-    public JsonResponse<List<Video>> getUserLikeList(@PathVariable("userId")int userId) throws BizException{
-        List<Video> result = videoService.findUserLikeVideo(userId);
-        return new JsonResponse<>(result);
-
+    public JsonResponse<List<JSONObject>> getUserLikeList(@PathVariable("userId")int userId) throws BizException{
+        int uid = userUtil.getCurrentUserId();//当前用户Id
+        List<Video> result = likeService.findUserLikeVideo(userId);
+        List<JSONObject> list = videoService.getVideoResponseData(result,uid);
+        return new JsonResponse<>(list);
     }
 
     /**
-     * 获取视频信息
+     * 获取详细视频信息
      * @param id
      * @return
      * @throws BizException
      */
     @GetMapping("/detail/{id}")
-    public JsonResponse<Video> detail(@PathVariable("id") int id) throws BizException{
-        Video result = videoService.findVideoById(id);
-        return new JsonResponse<>(result);
+    public JsonResponse<JSONObject> getDetail(@PathVariable("id") int id) throws BizException{
+        JSONObject jsonObject = videoService.getVideoDetail(id);
+        return new JsonResponse<>(jsonObject);
     }
 
     /**
-     * 点赞视频
-     * @param id
-     * @param userId
+     * 标签查找视频
+     * @param tag
+     * @param pageId
      * @return
-     * @throws BizException
      */
-    @PostMapping("/like")
-    public JsonResponse<String> like(@RequestBody int id,@RequestBody int userId) throws BizException{
-        videoService.like(id,userId);
-        return JsonResponse.success();
+    @GetMapping("/video-list/{tag}/{pageId}")
+    public JsonResponse<List<JSONObject>> getVideoByTag(@PathVariable("tag") String tag,
+                                                   @PathVariable("pageId")int pageId) {
+        int userId = userUtil.getCurrentUserId();
+        int offset = (pageId-1)* Page.limit;
+        int limit = Page.limit;
+        List<Video> result = videoService.findVideoByTag(tag,offset,limit);
+        List<JSONObject> list = videoService.getVideoResponseData(result,userId);
+        return new JsonResponse<>(list);
     }
-
 }
