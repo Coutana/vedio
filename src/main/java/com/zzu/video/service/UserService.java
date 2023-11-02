@@ -146,4 +146,8 @@ public class UserService implements UserConstant {
         }
         return result;
     }
+
+    public User findUserByName(String name) {
+        return userMapper.selectByName(name);
+    }
 }

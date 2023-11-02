@@ -14,20 +14,19 @@
     <select id="selectConversations" resultType="Message">
         select <include refid="selectFields"></include>
         from message
-        where id in (
-        select max(id) from message
-        where status != 2
-        and from_id != 1
+        where mid in (
+        select max(mid) from message
+        where  from_id != 1
         and (from_id = #{userId} or to_id = #{userId})
         group by conversation_id
         )
-        order by id desc
+        order by mid desc
         limit #{offset}, #{limit}
     </select>
 
     <select id="selectConversationCount" resultType="int">
         select count(m.maxid) from (
-                                       select max(id) as maxid from message
+                                       select max(mid) as maxid from message
                                        where status != 2
             and from_id != 1
             and (from_id = #{userId} or to_id = #{userId})
@@ -38,25 +37,23 @@
     <select id="selectLetters" resultType="Message">
         select <include refid="selectFields"></include>
         from message
-        where status != 2
-        and from_id != 1
+        where from_id != 1
         and conversation_id = #{conversationId}
-        order by id desc
+        order by mid desc
         limit #{offset}, #{limit}
     </select>
 
     <select id="selectLetterCount" resultType="int">
-        select count(id)
+        select count(mid)
         from message
-        where status != 2
-        and from_id != 1
+        where from_id != 1
         and conversation_id = #{conversationId}
     </select>
 
     <select id="selectLetterUnreadCount" resultType="int">
         select count(id)
         from message
-        where status = 0
+        where is_read = 0
         and from_id != 1
         and to_id = #{userId}
         <if test="conversationId!=null">
@@ -64,57 +61,22 @@
         </if>
     </select>
 
-    <insert id="insertMessage" parameterType="Message" keyProperty="id">
+    <insert id="insertMessage" parameterType="Message" keyProperty="mid">
         insert into message(<include refid="insertFields"></include>)
-        values(#{fromId},#{toId},#{conversationId},#{content},#{status},#{createTime})
+        values(#{fromId},#{toId},#{conversationId},#{content},#{isRead},#{createTime})
     </insert>
 
     <update id="updateStatus">
-        update message set status = #{status}
-        where id in
+        update message set is_read = #{isRead}
+        where mid in
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </update>
 
-    <select id="selectLatestNotice" resultType="Message">
-        select <include refid="selectFields"></include>
-        from message
-        where id in (
-        select max(id) from message
-        where status != 2
-        and from_id = 1
-        and to_id = #{userId}
-        and conversation_id = #{topic}
-        )
-    </select>
+    <delete id="deleteMessage">
+        delete from message
+        where mid=#{messageId}
+    </delete>
 
-    <select id="selectNoticeCount" resultType="int">
-        select count(id) from message
-        where status != 2
-        and from_id = 1
-        and to_id = #{userId}
-          and conversation_id = #{topic}
-    </select>
-
-    <select id="selectNoticeUnreadCount" resultType="int">
-        select count(id) from message
-        where status = 0
-        and from_id = 1
-        and to_id = #{userId}
-        <if test="topic!=null">
-            and conversation_id = #{topic}
-        </if>
-    </select>
-
-    <select id="selectNotices" resultType="Message">
-        select <include refid="selectFields"></include>
-        from message
-        where status != 2
-        and from_id = 1
-        and to_id = #{userId}
-        and conversation_id = #{topic}
-        order by create_time desc
-        limit #{offset}, #{limit}
-    </select>
 </mapper>

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 @Mapper
 public interface MessageMapper {
+    //查询所有会话消息
     List<Message> selectConversations(int userId, int offset, int limit);
 
     // 查询当前用户的会话数量.
@@ -24,5 +25,7 @@ public interface MessageMapper {
     int insertMessage(Message message);
 
     // 修改消息的状态
-    int updateStatus(List<Integer> ids, int status);
+    int updateStatus(List<Integer> ids, int isRead);
+
+    int deleteMessage(int messageId);
 }
