@@ -80,6 +80,11 @@ public class LikeController {
 
     }
 
+    /**
+     * 对评论点赞
+     * @param videoId
+     * @return
+     */
     @PostMapping("/like-comment")
     public JsonResponse<String> addCommentLike(@RequestParam int videoId){
         int userId = userUtil.getCurrentUserId();

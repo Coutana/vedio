@@ -64,6 +64,10 @@ public class MessageController {
         return new JsonResponse<>(result);
     }
 
+    /**
+     * 获取用户所有未读私信个数
+     * @return
+     */
     @GetMapping("/message/unRead")
     public JsonResponse<JSONObject> getAllUnReadMessageCount() {
         int userId = userUtil.getCurrentUserId();
@@ -73,6 +77,12 @@ public class MessageController {
         return new JsonResponse<>(jsonObject);
     }
 
+    /**
+     * 获取单个对话详情内容
+     * @param conversationId
+     * @param pageId
+     * @return
+     */
     @GetMapping("/letter/detail/{conversationId}/{pageId}")
     public JsonResponse<JSONObject> getLetterDetail(@PathVariable("conversationId")String conversationId,
                                                     @PathVariable("pageId")int pageId) {
@@ -125,6 +135,13 @@ public class MessageController {
         return ids;
     }
 
+    /**
+     * 发私信
+     * @param toname
+     * @param content
+     * @return
+     * @throws BizException
+     */
     @PostMapping("/letter/send")
     public JsonResponse<String> sendLetter(@RequestParam String toname,@RequestParam String content) throws BizException{
         User target = userService.findUserByName(toname);

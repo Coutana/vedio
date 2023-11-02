@@ -32,9 +32,14 @@ public class ShareController {
         return JsonResponse.success();
     }
 
-    @GetMapping("/share-count/{id}")
-    public JsonResponse<JSONObject> getShareCount(@PathVariable("id")int id) {
-        int count = shareService.findVideoShareCount(id);
+    /**
+     * 获取视频分享次数
+     * @param
+     * @return
+     */
+    @GetMapping("/share-count/{videoId}")
+    public JsonResponse<JSONObject> getShareCount(@PathVariable("videoId")int videoId) {
+        int count = shareService.findVideoShareCount(videoId);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("shareCount",count);
         return new JsonResponse<>(jsonObject);

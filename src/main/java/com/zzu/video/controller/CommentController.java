@@ -36,12 +36,24 @@ public class CommentController {
         this.userUtil = userUtil;
         this.likeService = likeService;
     }
+
+    /**
+     * 添加评论
+     * @param comment
+     * @return
+     */
     @PostMapping("/add")
     public JsonResponse<String> addComment(@RequestBody Comment comment) {
         commentService.addComment(comment);
         return JsonResponse.success();
     }
 
+    /**
+     * 获取视频评论
+     * @param videoId
+     * @param pageId
+     * @return
+     */
     @GetMapping("/{videoId}/{pageId}")
     public JsonResponse<List<JSONObject>> getCommentByVideoId(@PathVariable("videoId")int videoId,
                                                               @PathVariable("pageId")int pageId) {
