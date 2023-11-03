@@ -13,10 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * 注释
@@ -43,6 +40,7 @@ public class VideoService {
     }
 
     public int addVideo(Video video) {
+        video.setCreateTime(new Date());
         return videoMapper.insertVideo(video);
     }
 

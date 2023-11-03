@@ -71,7 +71,6 @@ public class VideoController {
         String upToken = auth.uploadToken(bucket);
         int userId = userUtil.getCurrentUserId();
         video.setUid(userId);
-        video.setCreateTime(new Date());
         videoService.addVideo(video);
         return new JsonResponse<>(upToken);
     }
