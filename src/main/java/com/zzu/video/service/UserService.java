@@ -133,7 +133,7 @@ public class UserService implements UserConstant {
     public String refreshAccessToken(String refreshToken) throws Exception {
         RefreshTokenDetail refreshTokenDetail = userMapper.getRefreshTokenDetail(refreshToken);
         if(refreshTokenDetail == null){
-            throw new BizException("555"," refreshtoken 已过期！");
+            throw new BizException(555," refreshtoken 已过期！");
         }
         int userId = refreshTokenDetail.getUid();
         return TokenUtil.generateToken(userId);

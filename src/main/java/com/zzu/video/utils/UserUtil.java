@@ -21,7 +21,7 @@ public class UserUtil {
         String token = request.getHeader("token");
         int userId = TokenUtil.verifyToken(token);
         if(userId < 0) {
-            throw new BizException("非法用户");
+            throw new BizException(401,"用户未登录");
         }
         return userId;
     }

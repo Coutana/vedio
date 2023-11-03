@@ -51,9 +51,9 @@ public class TokenUtil {
             String userId = jwt.getKeyId();
             return Integer.parseInt(userId);
         }catch (TokenExpiredException e){
-            throw new BizException("555","token过期！");
+            throw new BizException(403,"token过期！");
         }catch (Exception e){
-            throw new BizException("非法用户token！");
+            throw new BizException(401,"非法用户token！");
         }
     }
 }

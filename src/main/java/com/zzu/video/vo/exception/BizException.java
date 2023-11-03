@@ -10,23 +10,23 @@ public class BizException extends RuntimeException{
 
     private static final long serialVersionUID = 1L;
 
-    private String code;
+    private int code;
 
-    public BizException(String code, String name){
+    public BizException(int code, String name){
         super(name);
         this.code = code;
     }
 
     public BizException(String name){
         super(name);
-        code = "200";
+        code = 200;
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 }

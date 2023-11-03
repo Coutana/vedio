@@ -14,7 +14,10 @@ import com.zzu.video.vo.JsonResponse;
 import com.zzu.video.vo.exception.BizException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -121,8 +124,14 @@ public class VideoController {
      */
     @GetMapping("/video-list/{tag}/{pageId}")
     public JsonResponse<JSONObject> getVideoByTag(@PathVariable("tag") String tag,
-                                                   @PathVariable("pageId")int pageId) {
-        int userId = userUtil.getCurrentUserId();
+                                                   @PathVariable("pageId")int pageId) throws BizException{
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = requestAttributes.getRequest();
+        String token = request.getHeader("token");
+        int userId=0;
+        if(token!=null) {
+            userId = userUtil.getCurrentUserId();
+        }
         int offset = (pageId-1)* Page.limit;
         int limit = Page.limit;
         List<Video> result;

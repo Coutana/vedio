@@ -67,7 +67,7 @@ public class VideoService {
         for(Video video:videos) {
             JSONObject jsonObject = new JSONObject();
             Long likeCount = likeService.findVideoLikeCount(video.getVid());
-            boolean likeStatus = likeService.findVideoLikeStatus(userId,video.getVid());
+            boolean likeStatus = userId!=0&&likeService.findVideoLikeStatus(userId,video.getVid());
             UserInfo userInfo = userService.findUserInfoById(video.getUid());
             Integer shareCount = shareService.findVideoShareCount(video.getVid());
             int commentCount = commentService.findCommentCountByVideoId(video.getVid());
