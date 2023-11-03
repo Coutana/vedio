@@ -26,8 +26,8 @@ public class TokenUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.HOUR, 1);
-        return JWT.create().withKeyId(String.valueOf(userId))
-                .withIssuer(ISSUER)
+        return JWT.create()
+                .withIssuer(ISSUER).withClaim("uid",String.valueOf(userId))
                 .withExpiresAt(calendar.getTime())
                 .sign(algorithm);
     }
@@ -48,7 +48,7 @@ public class TokenUtil {
             Algorithm algorithm = Algorithm.RSA256(RSAUtil.getPublicKey(), RSAUtil.getPrivateKey());
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
-            String userId = jwt.getKeyId();
+            String userId = jwt.getClaim("uid").asString();
             return Integer.parseInt(userId);
         }catch (TokenExpiredException e){
             throw new BizException(403,"token过期！");
