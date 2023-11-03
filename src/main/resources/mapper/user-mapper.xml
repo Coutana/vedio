@@ -7,11 +7,11 @@
 
 
     <sql id="insertFields">
-        username, password, user_info, create_time
+        username, password, user_info, create_time,salt
     </sql>
 
     <sql id="selectFields">
-        uid, username, password, user_info, create_time
+        uid, username, password, user_info, create_time,salt
     </sql>
 
     <select id="selectById" resultType="User">
@@ -27,7 +27,7 @@
     </select>
     <insert id="insertUser" parameterType="User" useGeneratedKeys="true" keyProperty="uid">
         insert into user (<include refid="insertFields"></include>)
-        values(#{username}, #{password},#{userInfo}, #{createTime})
+        values(#{username}, #{password},#{userInfo}, #{createTime},#{salt})
     </insert>
 
     <insert id="insertRefreshToken" parameterType="RefreshTokenDetail" useGeneratedKeys="true" keyProperty="id">

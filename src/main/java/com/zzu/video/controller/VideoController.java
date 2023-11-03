@@ -125,7 +125,12 @@ public class VideoController {
         int userId = userUtil.getCurrentUserId();
         int offset = (pageId-1)* Page.limit;
         int limit = Page.limit;
-        List<Video> result = videoService.findVideoByTag(tag,offset,limit);
+        List<Video> result;
+        if(tag.equals("default"))
+            result = videoService.findVideoByTag(null,offset,limit);
+        else {
+            result = videoService.findVideoByTag(tag,offset,limit);
+        }
         List<JSONObject> list = videoService.getVideoResponseData(result,userId);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("videoList",list);

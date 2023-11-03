@@ -37,7 +37,10 @@
     <select id="selectByTag" resultType="Video">
         select <include refid="selectFields"></include>
         from video
-        where tag = #{tag}
+        where 1=1
+        <if test="tag!=null">
+            and tag = #{tag}
+        </if>
         order by create_time asc
         limit #{offset}, #{limit}
 

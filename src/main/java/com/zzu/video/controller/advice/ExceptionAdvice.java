@@ -25,6 +25,6 @@ public class ExceptionAdvice {
     @ExceptionHandler({BizException.class})
     public JsonResponse<String> handleException(Exception e) {
         logger.info(e.getMessage());
-        return new JsonResponse<String>(e.getMessage());
+        return new JsonResponse<>(e.getMessage());
     }
 }
