@@ -20,6 +20,4 @@ public class Video {
     private String tag;
     private String description;
     private Date createTime;
-    private int status;
-
 }

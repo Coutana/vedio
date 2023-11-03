@@ -26,7 +26,7 @@
 
     <insert id="insertVideo" parameterType="Video" keyProperty="vid">
         insert into video(<include refid="insertFields"></include>)
-        values(#{vid},#{uid},#{url},#{cover},#{duration},#{tag},#{description},#{createTime},#{status})
+        values(#{uid},#{url},#{cover},#{duration},#{tag},#{description},#{createTime})
     </insert>
 
     <select id="selectUserIdByVideoId" resultType="Integer">
@@ -36,7 +36,7 @@
 
     <select id="selectByTag" resultType="Video">
         select <include refid="selectFields"></include>
-        from Video
+        from video
         where tag = #{tag}
         order by create_time asc
         limit #{offset}, #{limit}

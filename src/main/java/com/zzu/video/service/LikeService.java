@@ -65,14 +65,14 @@ public class LikeService {
         return result;
     }
 
-    public int findVideoLikeStatus(int userId,int videoId) {
+    public boolean findVideoLikeStatus(int userId,int videoId) {
         String videoLikeKey = RedisKeyUtil.getVideoLikeKey(videoId);
         boolean isMember = redisTemplate.opsForSet().isMember(videoLikeKey,userId);
         if(isMember) {
-            return 1;
+            return true;
         }
         else {
-            return 0;
+            return false;
         }
     }
 

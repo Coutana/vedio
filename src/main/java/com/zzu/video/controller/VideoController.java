@@ -74,11 +74,11 @@ public class VideoController {
     }
 
     /**
-     * 查询用户发布的视频列表
+     * 查询某个用户发布的视频列表，并展示当前用户点赞状态
      * @author Coutana
      * @since 2.9.0
      */
-    @PostMapping("/user-publish/{userId}")
+    @GetMapping("/user-publish/{userId}")
     public JsonResponse<List<JSONObject>> getUserVideoList(@PathVariable("userId")int userId) throws BizException{
         int uid = userUtil.getCurrentUserId();//当前用户Id
         List<Video> result = videoService.findVideoByUserId(userId);
@@ -87,7 +87,7 @@ public class VideoController {
     }
 
     /**
-     * 查询用户点赞视频列表
+     * 查询某个用户点赞视频列表,，并展示当前用户点赞状态
      * @param userId
      * @return
      * @throws BizException
@@ -108,7 +108,8 @@ public class VideoController {
      */
     @GetMapping("/detail/{id}")
     public JsonResponse<JSONObject> getDetail(@PathVariable("id") int id) throws BizException{
-        JSONObject jsonObject = videoService.getVideoDetail(id);
+        int userId = userUtil.getCurrentUserId();
+        JSONObject jsonObject = videoService.getVideoDetail(id,userId);
         return new JsonResponse<>(jsonObject);
     }
 
@@ -119,13 +120,15 @@ public class VideoController {
      * @return
      */
     @GetMapping("/video-list/{tag}/{pageId}")
-    public JsonResponse<List<JSONObject>> getVideoByTag(@PathVariable("tag") String tag,
+    public JsonResponse<JSONObject> getVideoByTag(@PathVariable("tag") String tag,
                                                    @PathVariable("pageId")int pageId) {
         int userId = userUtil.getCurrentUserId();
         int offset = (pageId-1)* Page.limit;
         int limit = Page.limit;
         List<Video> result = videoService.findVideoByTag(tag,offset,limit);
         List<JSONObject> list = videoService.getVideoResponseData(result,userId);
-        return new JsonResponse<>(list);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("videoList",list);
+        return new JsonResponse<>(jsonObject);
     }
 }

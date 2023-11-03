@@ -73,7 +73,7 @@ public class LikeController {
     @GetMapping("/video/like-status/{id}")
     public JsonResponse<JSONObject> getVideoLikeStatus(@PathVariable("id")int id) {
         int userId = userUtil.getCurrentUserId();
-        int status = likeService.findVideoLikeStatus(userId,id);
+        boolean status = likeService.findVideoLikeStatus(userId,id);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status",status);
         return new JsonResponse<>(jsonObject);
@@ -113,7 +113,7 @@ public class LikeController {
     @GetMapping("/commenmt/like-status/{commentId}")
     public JsonResponse<JSONObject> getCommentLikeStatus(@PathVariable("commentId")int commentId) {
         int userId = userUtil.getCurrentUserId();
-        int status = likeService.findVideoLikeStatus(userId,commentId);
+        boolean status = likeService.findVideoLikeStatus(userId,commentId);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status",status);
         return new JsonResponse<>(jsonObject);

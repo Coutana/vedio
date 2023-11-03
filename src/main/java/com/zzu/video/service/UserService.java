@@ -64,13 +64,14 @@ public class UserService implements UserConstant {
         }
         Date now = new Date();
         String salt = String.valueOf(now.getTime());
-        String rawPassword;
+        /*String rawPassword;
         try{
             rawPassword = RSAUtil.decrypt(password);
         }catch (Exception e){
             throw new BizException("密码解密失败！");
         }
-        String md5Password = MD5Util.sign(rawPassword, salt, "UTF-8");
+        String md5Password = MD5Util.sign(rawPassword, salt, "UTF-8");*/
+        String md5Password = MD5Util.sign(password, salt, "UTF-8");
         user.setSalt(salt);
         user.setPassword(md5Password);
         user.setCreateTime(now);

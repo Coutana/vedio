@@ -54,7 +54,7 @@ public class VideoService {
         return videoMapper.selectByUserId(userId);
     }
 
-    public UserInfo findUserInfoByVIdeoId(int videoId) {
+    public UserInfo findUserInfoByVideoId(int videoId) {
         int userId = videoMapper.selectUserIdByVideoId(videoId);
         return userService.findUserInfoById(userId);
     }
@@ -67,26 +67,35 @@ public class VideoService {
         for(Video video:videos) {
             JSONObject jsonObject = new JSONObject();
             Long likeCount = likeService.findVideoLikeCount(video.getVid());
-            int likeStatus = likeService.findVideoLikeStatus(userId,video.getVid());
+            boolean likeStatus = likeService.findVideoLikeStatus(userId,video.getVid());
+            UserInfo userInfo = userService.findUserInfoById(video.getUid());
+            Integer shareCount = shareService.findVideoShareCount(video.getVid());
+            int commentCount = commentService.findCommentCountByVideoId(video.getVid());
+            jsonObject.put("userInfo",userInfo);
             jsonObject.put("videoInfo",video);
-            jsonObject.put("likeCount",likeCount);
-            jsonObject.put("likeStatus",likeStatus);
+            jsonObject.put("likeNum",likeCount);
+            jsonObject.put("shareNum",shareCount);
+            jsonObject.put("commentNum",commentCount);
+            jsonObject.put("status",likeStatus);
             list.add(jsonObject);
         }
         return list;
     }
-    public JSONObject getVideoDetail(int id) {
-        Video videoInfo = findVideoById(id);
-        UserInfo userInfo = findUserInfoByVIdeoId(id);
+
+    public JSONObject getVideoDetail(int id,int userId) {
+        Video video = findVideoById(id);
+        UserInfo userInfo = findUserInfoByVideoId(id);
         Long likeCount = likeService.findVideoLikeCount(id);
         Integer shareCount = shareService.findVideoShareCount(id);
         int commentCount = commentService.findCommentCountByVideoId(id);
+        boolean likeStatus = likeService.findVideoLikeStatus(userId,video.getVid());
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("videoInfo",videoInfo);
+        jsonObject.put("videoInfo",video);
         jsonObject.put("userInfo",userInfo);
-        jsonObject.put("likeCOunt",likeCount);
-        jsonObject.put("shareCount",shareCount);
-        jsonObject.put("commentCount",commentCount);
+        jsonObject.put("likeNum",likeCount);
+        jsonObject.put("shareNum",shareCount);
+        jsonObject.put("commentNum",commentCount);
+        jsonObject.put("status",likeStatus);
         return jsonObject;
     }
 
