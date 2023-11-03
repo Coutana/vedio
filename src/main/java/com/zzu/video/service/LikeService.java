@@ -21,21 +21,16 @@ import java.util.Set;
  */
 @Service
 public class LikeService {
-    private final VideoMapper videoMapper;
 
-    private final VideoService videoService;
+    private final VideoMapper videoMapper;
 
     private final RedisTemplate redisTemplate;
 
-    private final UserService userService;
-
     @Autowired
-    public LikeService(VideoMapper videoMapper,RedisTemplate redisTemplate,UserService userService,
-                       VideoService videoService) {
+    public LikeService(RedisTemplate redisTemplate,
+                       VideoMapper videoMapper) {
         this.redisTemplate = redisTemplate;
-        this.userService = userService;
         this.videoMapper = videoMapper;
-        this.videoService = videoService;
     }
 
     public void likeVideo(int id,int userId) {
@@ -65,7 +60,7 @@ public class LikeService {
         Set<Integer> set = findUserLikeVideoId(userId);
         List<Video> result = new ArrayList<Video>();
         for(int s:set) {
-            result.add(videoService.findVideoById(s));
+            result.add(videoMapper.selectById(s));
         }
         return result;
     }

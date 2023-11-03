@@ -28,18 +28,14 @@ import java.util.Vector;
 public class VideoService {
 
     private final VideoMapper videoMapper;
-
-    private final RedisTemplate redisTemplate;
-
     private final UserService userService;
     private final LikeService likeService;
     private final ShareService shareService;
     private final CommentService commentService;
     @Autowired
-    public VideoService(VideoMapper videoMapper,RedisTemplate redisTemplate,UserService userService,
+    public VideoService(VideoMapper videoMapper,UserService userService,
                         LikeService likeService,ShareService shareService,CommentService commentService) {
         this.videoMapper = videoMapper;
-        this.redisTemplate = redisTemplate;
         this.userService = userService;
         this.likeService = likeService;
         this.shareService = shareService;
