@@ -59,7 +59,7 @@ public class FollowService {
         return userService.getUserInfoByIds(set);
     }
     /**
-     * 获取用户被关注者列表
+     * 获取用户粉丝列表
      * @return
      */
     public List<UserInfo> getFolloweeList(int userId) {
