@@ -35,10 +35,11 @@ public class LikeController {
      * @return
      */
     @PostMapping("/like-video")
-    public JsonResponse<String> addVideoLike(@RequestParam int videoId){
+    public JsonResponse<Boolean> addVideoLike(@RequestParam int videoId){
         int userId = userUtil.getCurrentUserId();
         likeService.likeVideo(videoId, userId);
-        return JsonResponse.success();
+        boolean likeStatus = likeService.findVideoLikeStatus(userId,videoId);
+        return new JsonResponse<>(likeStatus);
     }
 
     /**
@@ -81,15 +82,16 @@ public class LikeController {
     }
 
     /**
-     * 对评论点赞
+     * 点赞评论
      * @param videoId
      * @return
      */
     @PostMapping("/like-comment")
-    public JsonResponse<String> addCommentLike(@RequestParam int videoId){
+    public JsonResponse<Boolean> addCommentLike(@RequestParam int videoId){
         int userId = userUtil.getCurrentUserId();
         likeService.likeComment(videoId, userId);
-        return JsonResponse.success();
+        boolean likeStatus = likeService.findCommentLikeStatus(userId,videoId);
+        return new JsonResponse<>(likeStatus);
     }
 
     /**
