@@ -43,9 +43,17 @@ public class CommentController {
      * @return
      */
     @PostMapping("/add")
-    public JsonResponse<String> addComment(@RequestBody Comment comment) {
-        commentService.addComment(comment);
-        return JsonResponse.success();
+    public JsonResponse<JSONObject> addComment(@RequestBody Comment comment) {
+        int userId = userUtil.getCurrentUserId();
+        comment.setUid(userId);
+        Comment newComment = commentService.addComment(comment);
+        UserInfo userInfo = userService.findUserInfoById(userId);
+        JSONObject responseData = new JSONObject();
+        responseData.put("commentInfo",newComment);
+        responseData.put("userInfo",userInfo);
+        responseData.put("likeStatus",false);
+        responseData.put("likeCount",0);
+        return new JsonResponse<>(responseData);
     }
 
     /**
@@ -55,7 +63,7 @@ public class CommentController {
      * @return
      */
     @GetMapping("/{videoId}/{pageId}")
-    public JsonResponse<List<JSONObject>> getCommentByVideoId(@PathVariable("videoId")int videoId,
+    public JsonResponse<JSONObject> getCommentByVideoId(@PathVariable("videoId")int videoId,
                                                               @PathVariable("pageId")int pageId) {
         int userId = userUtil.getCurrentUserId();
         int offset = (pageId-1)* Page.limit;
@@ -73,6 +81,8 @@ public class CommentController {
             jsonObject.put("likeCount",likeCount);
             list.add(jsonObject);
         }
-        return new JsonResponse<>(list);
+        JSONObject responseData = new JSONObject();
+        responseData.put("commentList",list);
+        return new JsonResponse<>(responseData);
     }
 }

@@ -17,7 +17,7 @@
         limit #{offset}, #{limit}
     </select>
 
-    <insert id="insertComment" parameterType="Comment" keyProperty="cid">
+    <insert id="insertComment" parameterType="Comment" keyProperty="cid" useGeneratedKeys="true">
         insert into comment(vid,uid,content,create_time)
         values(
                 #{vid},#{uid},#{content},#{createTime}

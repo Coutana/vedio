@@ -5,6 +5,7 @@ import com.zzu.video.entity.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,8 +28,10 @@ public class CommentService {
         return commentMapper.selectCommentsByVideoId(videoId,offset,limit);
     }
 
-    public void addComment(Comment comment) {
+    public Comment addComment(Comment comment) {
+        comment.setCreateTime(new Date());
         commentMapper.insertComment(comment);
+        return comment;
     }
 
     public void like(int commentId,int userId) {

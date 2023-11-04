@@ -119,7 +119,6 @@ public class LikeController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status",status);
         return new JsonResponse<>(jsonObject);
-
     }
 
 }

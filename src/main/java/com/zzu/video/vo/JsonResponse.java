@@ -11,13 +11,13 @@ import lombok.Data;
 @Data
 public class JsonResponse<T> {
 
-    private String code;
+    private int code;
 
     private String msg;
 
     private T data;
 
-    public JsonResponse(String code, String msg) {
+    public JsonResponse(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
@@ -25,7 +25,7 @@ public class JsonResponse<T> {
     public JsonResponse(T data) {
         this.data = data;
         msg = "success";
-        code = "0";
+        code = 0;
     }
 
     public static JsonResponse<String> success() {
@@ -37,10 +37,10 @@ public class JsonResponse<T> {
     }
 
     public static JsonResponse<String> fail() {
-        return new JsonResponse<>("1", "error");
+        return new JsonResponse<>(1, "error");
     }
 
-    public static JsonResponse<String> fail(String code, String msg) {
+    public static JsonResponse<String> fail(int code, String msg) {
         return new JsonResponse<>(code, msg);
     }
 }
