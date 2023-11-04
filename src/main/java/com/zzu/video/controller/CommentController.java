@@ -65,7 +65,7 @@ public class CommentController {
         for(Comment comment:result) {
             JSONObject jsonObject = new JSONObject();
             UserInfo userInfo = userService.findUserInfoById(comment.getUid());
-            int likeStatus = likeService.findCommentLikeStatus(userId,comment.getCid());
+            boolean likeStatus = likeService.findCommentLikeStatus(userId,comment.getCid());
             Long likeCount = likeService.findCommentLikeCount(comment.getCid());
             jsonObject.put("userInfo",userInfo);
             jsonObject.put("commentInfo",comment);

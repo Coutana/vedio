@@ -91,14 +91,14 @@ public class LikeService {
         return redisTemplate.opsForSet().size(RedisKeyUtil.getCommentLikeKey(id));
     }
 
-    public int findCommentLikeStatus(int userId,int commentId) {
+    public boolean findCommentLikeStatus(int userId,int commentId) {
         String videoLikeKey = RedisKeyUtil.getCommentLikeKey(commentId);
         boolean isMember = redisTemplate.opsForSet().isMember(videoLikeKey,userId);
         if(isMember) {
-            return 1;
+            return true;
         }
         else {
-            return 0;
+            return false;
         }
     }
 
