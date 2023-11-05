@@ -26,7 +26,7 @@ public class ShareController {
      * @param id
      * @return
      */
-    @GetMapping("/video-share/{id}")
+    @GetMapping("/video/{id}/share")
     public JsonResponse<String> share(@PathVariable("id") int id) {
         shareService.shareVideo(id);
         return JsonResponse.success();

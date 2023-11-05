@@ -70,7 +70,7 @@ public class VideoService {
             Integer shareCount = shareService.findVideoShareCount(video.getVid());
             int commentCount = commentService.findCommentCountByVideoId(video.getVid());
             jsonObject.put("userInfo",userInfo);
-            jsonObject.put("videoInfo",video);
+            jsonObject.put("video",video);
             jsonObject.put("likeNum",likeCount);
             jsonObject.put("shareNum",shareCount);
             jsonObject.put("commentNum",commentCount);

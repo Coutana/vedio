@@ -25,7 +25,7 @@ public class JsonResponse<T> {
     public JsonResponse(T data) {
         this.data = data;
         msg = "success";
-        code = 0;
+        code = 200;
     }
 
     public static JsonResponse<String> success() {

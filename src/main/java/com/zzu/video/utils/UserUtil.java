@@ -18,7 +18,7 @@ public class UserUtil {
     public int getCurrentUserId() {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
-        String token = request.getHeader("token");
+        String token = request.getHeader("Authoritization");
         int userId = TokenUtil.verifyToken(token);
         if(userId < 0) {
             throw new BizException(401,"用户未登录");

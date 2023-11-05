@@ -3,13 +3,9 @@ package com.zzu.video.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.zzu.video.entity.UserInfo;
 import com.zzu.video.service.FollowService;
-import com.zzu.video.service.UserService;
-import com.zzu.video.utils.RedisKeyUtil;
 import com.zzu.video.utils.UserUtil;
 import com.zzu.video.vo.JsonResponse;
-import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

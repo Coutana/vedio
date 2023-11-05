@@ -34,8 +34,8 @@ public class LikeController {
      * @param videoId
      * @return
      */
-    @PostMapping("/like-video")
-    public JsonResponse<Boolean> addVideoLike(@RequestParam int videoId){
+    @GetMapping("/like/video/{videoId}")
+    public JsonResponse<Boolean> addVideoLike(@PathVariable("videoId") int videoId){
         int userId = userUtil.getCurrentUserId();
         likeService.likeVideo(videoId, userId);
         boolean likeStatus = likeService.findVideoLikeStatus(userId,videoId);
@@ -71,26 +71,24 @@ public class LikeController {
      * @param id
      * @return
      */
-    @GetMapping("/video/like-status/{id}")
-    public JsonResponse<JSONObject> getVideoLikeStatus(@PathVariable("id")int id) {
+    @GetMapping("/like/video/status/{id}")
+    public JsonResponse<Boolean> getVideoLikeStatus(@PathVariable("id")int id) {
         int userId = userUtil.getCurrentUserId();
         boolean status = likeService.findVideoLikeStatus(userId,id);
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("status",status);
-        return new JsonResponse<>(jsonObject);
+        return new JsonResponse<>(status);
 
     }
 
     /**
      * 点赞评论
-     * @param videoId
+     * @param cid
      * @return
      */
-    @PostMapping("/like-comment")
-    public JsonResponse<Boolean> addCommentLike(@RequestParam int videoId){
+    @GetMapping("/like/comment/{cid}")
+    public JsonResponse<Boolean> addCommentLike(@PathVariable("cid") int cid){
         int userId = userUtil.getCurrentUserId();
-        likeService.likeComment(videoId, userId);
-        boolean likeStatus = likeService.findCommentLikeStatus(userId,videoId);
+        likeService.likeComment(cid, userId);
+        boolean likeStatus = likeService.findCommentLikeStatus(userId,cid);
         return new JsonResponse<>(likeStatus);
     }
 

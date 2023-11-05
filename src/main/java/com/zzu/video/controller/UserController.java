@@ -49,7 +49,7 @@ public class UserController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/login")
+    @PostMapping("/user/login")
     public JsonResponse<JSONObject> login(@RequestBody User user) throws Exception{
         JSONObject jsonObject = new JSONObject();
         String token = userService.login(user);
@@ -73,7 +73,7 @@ public class UserController {
      * @return
      * @throws Exception
      */
-    @GetMapping("/info/{userId}")
+    @GetMapping("/user/info/{userId}")
     public JsonResponse<UserInfo> getUserInfo(@PathVariable("userId")int userId) throws Exception {
         UserInfo userInfo = userService.findUserInfoById(userId);
         return new JsonResponse<>(userInfo);

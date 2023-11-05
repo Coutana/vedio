@@ -12,6 +12,7 @@ import com.zzu.video.vo.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +29,10 @@ public class CommentController {
     private final UserService userService;
     private final UserUtil userUtil;
     private final LikeService likeService;
+
     @Autowired
-    public CommentController(CommentService commentService,UserService userService,
-                             UserUtil userUtil,LikeService likeService) {
+    public CommentController(CommentService commentService, UserService userService,
+                             UserUtil userUtil, LikeService likeService) {
         this.commentService = commentService;
         this.userService = userService;
         this.userUtil = userUtil;
@@ -39,6 +41,7 @@ public class CommentController {
 
     /**
      * 添加评论
+     *
      * @param comment
      * @return
      */
@@ -49,40 +52,39 @@ public class CommentController {
         Comment newComment = commentService.addComment(comment);
         UserInfo userInfo = userService.findUserInfoById(userId);
         JSONObject responseData = new JSONObject();
-        responseData.put("commentInfo",newComment);
-        responseData.put("userInfo",userInfo);
-        responseData.put("likeStatus",false);
-        responseData.put("likeCount",0);
+        responseData.put("comment", newComment);
+        responseData.put("userInfo", userInfo);
+        responseData.put("status", false);
+        responseData.put("likeNum", 0);
         return new JsonResponse<>(responseData);
     }
 
     /**
      * 获取视频评论
+     *
      * @param videoId
      * @param pageId
      * @return
      */
-    @GetMapping("/{videoId}/{pageId}")
-    public JsonResponse<JSONObject> getCommentByVideoId(@PathVariable("videoId")int videoId,
-                                                              @PathVariable("pageId")int pageId) {
-        int userId = userUtil.getCurrentUserId();
-        int offset = (pageId-1)* Page.limit;
+    @GetMapping("/video/{videoId}/page/{pageId}")
+    public JsonResponse<List<JSONObject>> getCommentByVideoId(@PathVariable("videoId") int videoId, @PathVariable("pageId") int pageId, HttpServletRequest request) {
+
+        int userId = request.getHeader("Authoritization") != null ? userUtil.getCurrentUserId() : 0;
+        int offset = (pageId - 1) * Page.limit;
         int limit = Page.limit;
-        List<Comment> result = commentService.findCommentByVideoId(videoId,offset,limit);
+        List<Comment> result = commentService.findCommentByVideoId(videoId, offset, limit);
         List<JSONObject> list = new ArrayList<>();
-        for(Comment comment:result) {
-            JSONObject jsonObject = new JSONObject();
+        for (Comment comment : result) {
             UserInfo userInfo = userService.findUserInfoById(comment.getUid());
-            boolean likeStatus = likeService.findCommentLikeStatus(userId,comment.getCid());
+            boolean likeStatus = userId != 0 && likeService.findCommentLikeStatus(userId, comment.getCid());
             Long likeCount = likeService.findCommentLikeCount(comment.getCid());
-            jsonObject.put("userInfo",userInfo);
-            jsonObject.put("commentInfo",comment);
-            jsonObject.put("likeStatus",likeStatus);
-            jsonObject.put("likeCount",likeCount);
+            JSONObject jsonObject = new JSONObject()
+                    .fluentPut("userInfo", userInfo)
+                    .fluentPut("comment", comment)
+                    .fluentPut("status", likeStatus)
+                    .fluentPut("likeNum", likeCount);
             list.add(jsonObject);
         }
-        JSONObject responseData = new JSONObject();
-        responseData.put("commentList",list);
-        return new JsonResponse<>(responseData);
+        return new JsonResponse<>(list);
     }
 }
